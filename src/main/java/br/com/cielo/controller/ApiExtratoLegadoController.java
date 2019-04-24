@@ -18,7 +18,6 @@ public class ApiExtratoLegadoController {
 
 
     @GetMapping("/extrato/all")
-
     public List<Movimento> retrieveAllMovimentos() {
         return apiExtratoLegadoService.retrieveAllMovimentos();
     }
