@@ -36,17 +36,6 @@ public class ApiExtratoLegadoService {
     @Autowired
     private ExtratoRepository repository;
 
-    static {
-        Movimento movimento1 = Movimento.builder()
-                .dadosBancarios("BANCO ABCD SA AG 12 CC 0001231234")
-                .dataConferencia(new Date())
-                .dataLancamento(new Date())
-                .descricao("REGULAR").numero(672108074000l).situacao("PAGO").valor(new BigDecimal("28714")).build();
-
-        extrato.add(movimento1);
-
-    }
-
     public List<Movimento> retrieveAllMovimentos() {
         repository.findAll().iterator().forEachRemaining(extrato::add);
         return extrato;
