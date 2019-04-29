@@ -82,19 +82,4 @@ public class ApiExtratoLegadoService {
         return salvar;
     }
 
-/*
-    public synchronized List<Movimento> filtrarMovimentosDuplicados(List<Movimento> novosMovimentos) {
-        List<Movimento> atualMovimentos = retrieveAllMovimentos();
-        List<Movimento> salvar = novosMovimentos;
-        novosMovimentos.forEach(novo -> {
-            atualMovimentos.forEach(mov -> {
-                if(mov.equals(novo)) {
-                    salvar.remove(novo);
-                }
-            });
-        });
-        return salvar;
-    }
-
- */
 }
