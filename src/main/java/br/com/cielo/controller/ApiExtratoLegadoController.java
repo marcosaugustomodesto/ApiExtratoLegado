@@ -4,8 +4,11 @@ import br.com.cielo.model.Movimento;
 import br.com.cielo.service.ApiExtratoLegadoService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.Collection;
 import java.util.List;
 
 
@@ -17,7 +20,7 @@ public class ApiExtratoLegadoController {
     private ApiExtratoLegadoService apiExtratoLegadoService;
 
 
-    @GetMapping("/extrato/all")
+    @RequestMapping(value = "/extrato/all", method = RequestMethod.GET,  produces = { "application/json" })
     public List<Movimento> retrieveAllMovimentos() {
         return apiExtratoLegadoService.retrieveAllMovimentos();
     }

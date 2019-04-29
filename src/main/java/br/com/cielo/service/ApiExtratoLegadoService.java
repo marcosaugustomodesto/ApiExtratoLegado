@@ -4,6 +4,7 @@ import br.com.cielo.jpa.ExtratoRepository;
 import br.com.cielo.model.Movimento;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.apache.tomcat.jni.Thread;
 import org.json.simple.JSONArray;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
@@ -25,8 +26,6 @@ import java.util.stream.Collectors;
 @Component
 public class ApiExtratoLegadoService {
 
-    private static List<Movimento> extrato = new ArrayList<>();
-
     private static final Logger log = LoggerFactory.getLogger(ApiExtratoLegadoService.class);
 
     private static final SimpleDateFormat dateFormat = new SimpleDateFormat("HH:mm:ss");
@@ -36,30 +35,22 @@ public class ApiExtratoLegadoService {
     @Autowired
     private ExtratoRepository repository;
 
-    static {
-        Movimento movimento1 = Movimento.builder()
-                .dadosBancarios("BANCO ABCD SA AG 12 CC 0001231234")
-                .dataConferencia(new Date())
-                .dataLancamento(new Date())
-                .descricao("REGULAR").numero(672108074000l).situacao("PAGO").valor(new BigDecimal("28714")).build();
-
-        extrato.add(movimento1);
-
-    }
-
     public List<Movimento> retrieveAllMovimentos() {
+        List<Movimento> extrato = new ArrayList<>();
         repository.findAll().iterator().forEachRemaining(extrato::add);
         return extrato;
     }
 
     @Scheduled(fixedRate = 5000)
-    public void importarDadosJSONLegado() {
+    public synchronized void importarDadosJSONLegado() {
+
         log.info("The time is now {}", dateFormat.format(new Date()));
 
         try {
             JSONParser parser = new JSONParser();
             JSONArray jsonMovimentos = (JSONArray) parser.parse(new FileReader(FILE_NAME));
-            List<Movimento> novosMovimentos = new ObjectMapper().readValue(jsonMovimentos.toJSONString(), new TypeReference<List<Movimento>>() {});
+            List<Movimento> novosMovimentos = new ObjectMapper().readValue(jsonMovimentos.toJSONString(), new TypeReference<List<Movimento>>() {
+            });
             List<Movimento> salvarMovimentos = filtrarMovimentosDuplicados(novosMovimentos);
             System.out.println("Movimentos salvos!");
             salvarMovimentos.forEach(repository::save);
@@ -72,8 +63,38 @@ public class ApiExtratoLegadoService {
 
     }
 
-    public List<Movimento> filtrarMovimentosDuplicados(List<Movimento> novosMovimentos) {
+    public synchronized List<Movimento> filtrarMovimentosDuplicados(List<Movimento> novosMovimentos) {
         List<Movimento> atualMovimentos = retrieveAllMovimentos();
-        return novosMovimentos.stream().filter(mov -> !atualMovimentos.contains(mov)).collect(Collectors.toList());
+        List<Movimento> salvar = novosMovimentos
+                .stream()
+                .filter(novo -> !atualMovimentos.contains(novo))
+                .map(novo -> {
+                            return Movimento.builder()
+                                    .dadosBancarios(novo.getDadosBancarios())
+                                    .dataConferencia(novo.getDataConferencia())
+                                    .dataLancamento(novo.getDataLancamento())
+                                    .descricao(novo.getDescricao())
+                                    .numero(novo.getNumero())
+                                    .id(novo.getId())
+                                    .valor(novo.getValor()).build();
+                        }
+                ).collect(Collectors.toList());
+        return salvar;
     }
+
+/*
+    public synchronized List<Movimento> filtrarMovimentosDuplicados(List<Movimento> novosMovimentos) {
+        List<Movimento> atualMovimentos = retrieveAllMovimentos();
+        List<Movimento> salvar = novosMovimentos;
+        novosMovimentos.forEach(novo -> {
+            atualMovimentos.forEach(mov -> {
+                if(mov.equals(novo)) {
+                    salvar.remove(novo);
+                }
+            });
+        });
+        return salvar;
+    }
+
+ */
 }

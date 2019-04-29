@@ -14,6 +14,8 @@ import java.math.BigDecimal;
 import java.util.Date;
 import java.util.Objects;
 
+import static java.util.Objects.isNull;
+
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
@@ -40,24 +42,26 @@ public class Movimento {
 
     private String dadosBancarios;
 
-    private BigDecimal valor;
+    private Double valor;
 
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
+        if (!(o instanceof Movimento)) return false;
         Movimento movimento = (Movimento) o;
-        return Objects.equals(dataLancamento.getTime(), movimento.dataLancamento.getTime()) &&
+        return ((isNull(dataLancamento) && isNull(movimento.dataLancamento)) ||
+                (Objects.equals(dataLancamento.getTime(), movimento.dataLancamento.getTime()))) &&
                 Objects.equals(descricao, movimento.descricao) &&
                 Objects.equals(numero, movimento.numero) &&
                 Objects.equals(situacao, movimento.situacao) &&
-                Objects.equals(dataConferencia.getTime(), movimento.dataConferencia.getTime()) &&
-                Objects.equals(dadosBancarios, movimento.dadosBancarios) &&
-                Objects.equals(valor, movimento.valor);
+                (isNull(dataConferencia) && isNull(movimento.dataConferencia)) ||
+                (Objects.equals(dataConferencia.getTime(), movimento.dataConferencia.getTime())) &&
+                        Objects.equals(dadosBancarios, movimento.dadosBancarios) &&
+                        Objects.equals(valor, movimento.valor);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(dataLancamento.getTime(), descricao, numero, situacao, dataConferencia.getTime(), dadosBancarios, valor);
+        return Objects.hash(dataLancamento, descricao, numero, situacao, dataConferencia, dadosBancarios, valor);
     }
 }
