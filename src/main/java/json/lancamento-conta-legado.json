@@ -1,11 +1,20 @@
-{
- "dataLancamento":"",
- "descricao":"REGULAR",
- "numero":"672108074000l",
- "situacao":"PAGO",
- "dataConferencia": "",
- "dadosBancarios":"BANCO ABCD SA AG 12 CC 0001231234",
- "valor":"28714"
-},
-
-
+[
+ {
+  "dataLancamento":"01/01/2019",
+  "descricao":"REGULAR",
+  "numero": "672108074000",
+  "situacao":"PAGO",
+  "dataConferencia": "04/01/2019",
+  "dadosBancarios":"BANCO ABCD SA AG 12 CC 0001231234",
+  "valor":"28714"
+ },
+ {
+  "dataLancamento":"06/01/2019",
+  "descricao":"REGULAR",
+  "numero": "6934308074000",
+  "situacao":"ABERTO",
+  "dataConferencia": "08/01/2019",
+  "dadosBancarios":"BANCO ABCD SA AG 12 CC 0001231234",
+  "valor":"28714"
+ }
+]
