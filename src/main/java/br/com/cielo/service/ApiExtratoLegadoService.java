@@ -76,6 +76,7 @@ public class ApiExtratoLegadoService {
                                     .descricao(novo.getDescricao())
                                     .numero(novo.getNumero())
                                     .id(novo.getId())
+                                    .situacao(novo.getSituacao())
                                     .valor(novo.getValor()).build();
                         }
                 ).collect(Collectors.toList());

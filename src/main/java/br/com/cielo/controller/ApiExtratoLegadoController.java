@@ -20,7 +20,7 @@ public class ApiExtratoLegadoController {
     private ApiExtratoLegadoService apiExtratoLegadoService;
 
 
-    @RequestMapping(value = "/extrato/all", method = RequestMethod.GET,  produces = { "application/json" })
+    @RequestMapping(value = "/extrato/all", method = RequestMethod.GET, produces = {"application/json"})
     public List<Movimento> retrieveAllMovimentos() {
         return apiExtratoLegadoService.retrieveAllMovimentos();
     }
