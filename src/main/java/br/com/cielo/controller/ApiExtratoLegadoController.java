@@ -3,12 +3,11 @@ package br.com.cielo.controller;
 import br.com.cielo.model.Movimento;
 import br.com.cielo.service.ApiExtratoLegadoService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.util.Collection;
 import java.util.List;
 
 
@@ -24,5 +23,12 @@ public class ApiExtratoLegadoController {
     public List<Movimento> retrieveAllMovimentos() {
         return apiExtratoLegadoService.retrieveAllMovimentos();
     }
+
+    @RequestMapping(value = "/extrato/page", method = RequestMethod.GET, produces = {"application/json"})
+    public List<Movimento> retrieveAllMovimentosFromPage(@RequestParam("pagina") Integer pagina) {
+        return apiExtratoLegadoService.retrieveAllMovimentosFromPage(pagina);
+    }
+
+
 
 }

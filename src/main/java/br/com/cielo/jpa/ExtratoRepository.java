@@ -1,10 +1,10 @@
 package br.com.cielo.jpa;
 
 import br.com.cielo.model.Movimento;
-import org.springframework.data.repository.CrudRepository;
+import org.springframework.data.repository.PagingAndSortingRepository;
 
 
-public interface ExtratoRepository extends CrudRepository<Movimento, Long> {
+public interface ExtratoRepository extends PagingAndSortingRepository<Movimento, Long> {
 
 }
 
